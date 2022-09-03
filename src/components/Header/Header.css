@@ -1,0 +1,6 @@
+.header {
+  text-align: center;
+  font-size: var(--fs-800);
+  font-weight: bolder;
+  padding-block: 1rem;
+}

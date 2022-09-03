@@ -1,0 +1,39 @@
+.grid {
+  display: grid;
+  grid-auto-flow: row;
+  place-content: center;
+  grid-gap: 0.5rem;
+  flex: 1;
+}
+
+.grid-row {
+  display: flex;
+  grid-gap: 0.5rem;
+}
+
+.grid-cell {
+  user-select: none;
+  display: grid;
+  place-content: center;
+  width: var(--grid-cell-size);
+  height: var(--grid-cell-size);
+  border: 0.5px solid var(--clr-grey);
+  font-size: var(--fs-600);
+}
+
+.grid-cell[data-status] {
+  border: none;
+}
+
+.grid-cell[data-status="not-present"] {
+  background-color: var(--clr-not-present);
+}
+
+.grid-cell[data-status="correct"] {
+  background-color: var(--clr-correct);
+}
+
+.grid-cell[data-status="wrong-position"] {
+  background-color: var(--clr-wrong-position);
+}
+
