@@ -52,12 +52,14 @@ function App() {
       GUESS_STATUS.NOT_PRESENT
     );
 
+    // Check for correct letters
     for (let index = 0; index < GUESS_LENGTH; index++) {
       if (currentGuess[index] !== correctGuess[index]) continue;
 
       currentGuessStatus[index] = GUESS_STATUS.CORRECT;
     }
 
+    // Check for wrongly positioned letters
     for (let index = 0; index < GUESS_LENGTH; index++) {
       if (currentGuessStatus[index] === GUESS_STATUS.CORRECT) continue;
 
@@ -122,6 +124,10 @@ function App() {
       window.removeEventListener("keydown", keyDownHandler);
     };
   }, []);
+
+  useEffect(() => {
+    if (guessCount === NUMBER_OF_GUESSES) setGameStatus(GAME_STATUS.LOSE);
+  }, [guessCount]);
 
   return (
     <div className="app">
