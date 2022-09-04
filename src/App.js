@@ -12,16 +12,68 @@ const KEYS = {
   BACKSPACE: "Backspace",
   ENTER: "Enter",
 };
+const GAME_STATUS = {
+  PLAYING: "playing",
+  WON: "won",
+  LOSE: "lose",
+};
+const GUESS_STATUS = {
+  EMPTY: "empty",
+  NOT_PRESENT: "not-present",
+  CORRECT: "correct",
+  WRONG_POSITION: "wrong-position",
+};
 
 let guessCount = 0;
+const correctWord = "hello";
 
 function App() {
-  const [currentGuess, setCurrentGuess, currentGuessRef] = useStateRef("");
+  const [, setCurrentGuess, currentGuessRef] = useStateRef("");
+  const [, setGameStatus, gameStatusRef] = useStateRef(GAME_STATUS.PLAYING);
+  const [guessStatus, setGuessStatus] = useState(
+    Array.from(new Array(NUMBER_OF_GUESSES), () =>
+      new Array(GUESS_LENGTH).fill(GUESS_STATUS.EMPTY)
+    )
+  );
   const [guesses, setGuesses] = useState(
     Array(NUMBER_OF_GUESSES).fill(" ".repeat(GUESS_LENGTH))
   );
 
-  const checkIfCurrentGuessIsCorrect = () => {};
+  const checkIfCurrentGuessIsCorrect = () => {
+    let currentGuess = currentGuessRef.current.toLowerCase(),
+      correctGuess = correctWord.toLowerCase();
+
+    if (currentGuessRef === correctGuess) {
+      setGameStatus(GAME_STATUS.WON);
+      alert("You Won!");
+    }
+
+    const currentGuessStatus = Array(GUESS_LENGTH).fill(
+      GUESS_STATUS.NOT_PRESENT
+    );
+
+    for (let index = 0; index < GUESS_LENGTH; index++) {
+      if (currentGuess[index] !== correctGuess[index]) continue;
+
+      currentGuessStatus[index] = GUESS_STATUS.CORRECT;
+    }
+
+    for (let index = 0; index < GUESS_LENGTH; index++) {
+      if (currentGuessStatus[index] === GUESS_STATUS.CORRECT) continue;
+
+      const charIndex = currentGuess.indexOf(correctGuess[index]);
+      if (
+        charIndex > -1 &&
+        currentGuessStatus[charIndex] !== GUESS_STATUS.CORRECT
+      )
+        currentGuessStatus[charIndex] = GUESS_STATUS.WRONG_POSITION;
+    }
+
+    setGuessStatus((prevGuessStatus) => {
+      prevGuessStatus[guessCount - 1] = currentGuessStatus;
+      return prevGuessStatus;
+    });
+  };
 
   const updateCurrentGuess = (newCurrentGuess) => {
     setCurrentGuess(newCurrentGuess);
@@ -33,6 +85,12 @@ function App() {
   };
 
   const keyDownHandler = (event) => {
+    if (
+      gameStatusRef.current === GAME_STATUS.WON ||
+      gameStatusRef.current === GAME_STATUS.LOSE
+    )
+      return;
+
     if (event.key === KEYS.BACKSPACE)
       updateCurrentGuess(
         currentGuessRef.current.slice(0, currentGuessRef.current.length - 1)
@@ -68,7 +126,7 @@ function App() {
   return (
     <div className="app">
       <Header />
-      <Grid guesses={guesses} />
+      <Grid guesses={guesses} guessStatus={guessStatus} />
       <Keyboard keyDownHandler={keyDownHandler} />
     </div>
   );

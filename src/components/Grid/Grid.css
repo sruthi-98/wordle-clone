@@ -17,12 +17,11 @@
   place-content: center;
   width: var(--grid-cell-size);
   height: var(--grid-cell-size);
-  border: 0.5px solid var(--clr-grey);
   font-size: var(--fs-600);
 }
 
-.grid-cell[data-status] {
-  border: none;
+.grid-cell[data-status="empty"] {
+  border: 0.5px solid var(--clr-grey);
 }
 
 .grid-cell[data-status="not-present"] {
