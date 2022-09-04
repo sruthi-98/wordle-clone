@@ -1,49 +1,22 @@
 import React from "react";
-import './Grid.css'
+import "./Grid.css";
 
-const Grid = () => {
-  return <div className="grid">
-    <div className="grid-row">
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-    </div>
-    <div className="grid-row">
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-    </div>
-    <div className="grid-row">
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-    </div>
-    <div className="grid-row">
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-    </div>
-    <div className="grid-row">
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-      <div className="grid-cell"></div>
-    </div>
-  </div>;
-};
+const Grid = ({ guesses }) => (
+  <div className="grid">
+    {guesses.map((guess, index) => (
+      <GridRow key={index} guess={guess} />
+    ))}
+  </div>
+);
 
 export default Grid;
+
+const GridRow = ({ guess }) => (
+  <div className="grid-row">
+    {guess.split("").map((guessChar, index) => (
+      <div className="grid-cell" key={index}>
+        {guessChar}
+      </div>
+    ))}
+  </div>
+);
