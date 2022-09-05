@@ -4,6 +4,7 @@ import Grid from "components/Grid/Grid";
 import Header from "components/Header/Header";
 import Keyboard from "components/Keyboard/Keyboard";
 import useStateRef from "hooks/useStateRef";
+import getRandomWord from "utils/getRandomWord";
 import {
   GAME_STATUS,
   GUESS_LENGTH,
@@ -14,11 +15,12 @@ import {
 import "./App.css";
 
 let guessCount = 0;
-const correctWord = "hello";
 
 function App() {
   const [, setCurrentGuess, currentGuessRef] = useStateRef("");
   const [, setGameStatus, gameStatusRef] = useStateRef(GAME_STATUS.PLAYING);
+  const [, setRandomWord, randomWordRef] = useStateRef("");
+
   const [guessStatus, setGuessStatus] = useState(
     Array.from(new Array(NUMBER_OF_GUESSES), () =>
       new Array(GUESS_LENGTH).fill(GUESS_STATUS.EMPTY)
@@ -30,12 +32,9 @@ function App() {
 
   const checkIfCurrentGuessIsCorrect = () => {
     let currentGuess = currentGuessRef.current.toLowerCase(),
-      correctGuess = correctWord.toLowerCase();
+      correctGuess = randomWordRef.current.toLowerCase();
 
-    if (currentGuessRef === correctGuess) {
-      setGameStatus(GAME_STATUS.WON);
-      alert("You Won!");
-    }
+    if (currentGuess === correctGuess) setGameStatus(GAME_STATUS.WON);
 
     const currentGuessStatus = Array(GUESS_LENGTH).fill(
       GUESS_STATUS.NOT_PRESENT
@@ -107,6 +106,8 @@ function App() {
   };
 
   useEffect(() => {
+    setRandomWord(getRandomWord());
+
     window.addEventListener("keydown", keyDownHandler);
 
     return () => {
