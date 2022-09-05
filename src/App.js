@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Grid from "components/Grid/Grid";
 import Header from "components/Header/Header";
 import Keyboard from "components/Keyboard/Keyboard";
+import Toast from "components/Toast/Toast";
 import useStateRef from "hooks/useStateRef";
 import getRandomWord from "utils/getRandomWord";
 import {
@@ -12,6 +13,7 @@ import {
   KEYS,
   NUMBER_OF_GUESSES,
 } from "data/constants";
+import { WORDS } from "data/words";
 import "./App.css";
 
 let guessCount = 0;
@@ -29,6 +31,13 @@ function App() {
   const [guesses, setGuesses] = useState(
     Array(NUMBER_OF_GUESSES).fill(" ".repeat(GUESS_LENGTH))
   );
+  const [showToast, setShowToast] = useState(false);
+  const [toastText, setToastText] = useState("");
+
+  const setToast = (text) => {
+    setShowToast(true);
+    setToastText(text);
+  };
 
   const addKeyboardStatus = (key, status) => {
     const keyboardKey = document.querySelector(
@@ -42,7 +51,10 @@ function App() {
     let currentGuess = currentGuessRef.current.toLowerCase(),
       correctGuess = randomWordRef.current.toLowerCase();
 
-    if (currentGuess === correctGuess) setGameStatus(GAME_STATUS.WON);
+    if (currentGuess === correctGuess) {
+      setToast("You Won!");
+      setGameStatus(GAME_STATUS.WON);
+    }
 
     const currentGuessStatus = Array(GUESS_LENGTH).fill(
       GUESS_STATUS.NOT_PRESENT
@@ -100,7 +112,15 @@ function App() {
       );
 
     if (event.key === KEYS.ENTER) {
-      if (currentGuessRef.current.length !== GUESS_LENGTH) return;
+      if (currentGuessRef.current.length !== GUESS_LENGTH) {
+        setToast("Not enough letters");
+        return;
+      }
+
+      if (!WORDS.includes(currentGuessRef.current.toLowerCase())) {
+        setToast("Not in word list");
+        return;
+      }
 
       checkIfCurrentGuessIsCorrect();
       setCurrentGuess("");
@@ -129,7 +149,13 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (guessCount === NUMBER_OF_GUESSES) setGameStatus(GAME_STATUS.LOSE);
+    if (
+      guessCount === NUMBER_OF_GUESSES &&
+      gameStatusRef.current !== GAME_STATUS.WON
+    ) {
+      setGameStatus(GAME_STATUS.LOSE);
+      setToast(randomWordRef.current.toUpperCase());
+    }
   }, [guessCount]);
 
   return (
@@ -137,6 +163,13 @@ function App() {
       <Header />
       <Grid guesses={guesses} guessStatus={guessStatus} />
       <Keyboard keyDownHandler={keyDownHandler} />
+      {showToast && (
+        <Toast
+          setShowToast={setShowToast}
+          showToast={showToast}
+          toastText={toastText}
+        />
+      )}
     </div>
   );
 }
