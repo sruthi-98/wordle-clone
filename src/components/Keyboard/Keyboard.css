@@ -31,3 +31,15 @@
 .keyboard-key.large {
   width: calc(1.5 * var(--keyboard-cell-width));
 }
+
+.keyboard-key[data-status="not-present"] {
+  background-color: var(--clr-not-present);
+}
+
+.keyboard-key[data-status="correct"] {
+  background-color: var(--clr-correct);
+}
+
+.keyboard-key[data-status="wrong-position"] {
+  background-color: var(--clr-wrong-position);
+}
