@@ -30,6 +30,14 @@ function App() {
     Array(NUMBER_OF_GUESSES).fill(" ".repeat(GUESS_LENGTH))
   );
 
+  const addKeyboardStatus = (key, status) => {
+    const keyboardKey = document.querySelector(
+      `.keyboard-key[data-key=${key.toUpperCase()}]`
+    );
+    if (keyboardKey && keyboardKey.dataset?.status !== GUESS_STATUS.CORRECT)
+      keyboardKey.dataset.status = status;
+  };
+
   const checkIfCurrentGuessIsCorrect = () => {
     let currentGuess = currentGuessRef.current.toLowerCase(),
       correctGuess = randomWordRef.current.toLowerCase();
@@ -55,8 +63,13 @@ function App() {
       if (
         charIndex > -1 &&
         currentGuessStatus[charIndex] !== GUESS_STATUS.CORRECT
-      )
+      ) {
         currentGuessStatus[charIndex] = GUESS_STATUS.WRONG_POSITION;
+      }
+    }
+
+    for (let index = 0; index < GUESS_LENGTH; index++) {
+      addKeyboardStatus(currentGuess[index], currentGuessStatus[index]);
     }
 
     setGuessStatus((prevGuessStatus) => {
