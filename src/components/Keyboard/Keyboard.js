@@ -45,7 +45,7 @@ const Keyboard = ({ keyDownHandler }) => {
         <p className="keyboard-key" data-key="I">
           I
         </p>
-        <p className="keyboard-key" data-key="0">
+        <p className="keyboard-key" data-key="O">
           O
         </p>
         <p className="keyboard-key" data-key="P">
