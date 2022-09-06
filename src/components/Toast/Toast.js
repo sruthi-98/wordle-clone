@@ -6,7 +6,7 @@ const Toast = ({ setShowToast, showToast, toastText }) => {
     if (showToast)
       setTimeout(() => {
         setShowToast(false);
-      }, 3000);
+      }, 2000);
   }, [showToast]);
 
   return <div className="toast">{toastText}</div>;
