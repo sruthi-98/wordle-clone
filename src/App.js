@@ -39,6 +39,17 @@ function App() {
     setToastText(text);
   };
 
+  const addRowShakeAnimation = () => {
+    const gridRow = document.querySelectorAll(".grid-row")?.[guessCount];
+    if (!gridRow) return;
+
+    gridRow.setAttribute('data-animation', 'shake')
+
+    setTimeout(() => {
+      gridRow.removeAttribute('data-animation')
+    }, 1000);
+  };
+
   const addKeyboardStatus = (key, status) => {
     const keyboardKey = document.querySelector(
       `.keyboard-key[data-key=${key.toUpperCase()}]`
@@ -113,11 +124,13 @@ function App() {
 
     if (event.key === KEYS.ENTER) {
       if (currentGuessRef.current.length !== GUESS_LENGTH) {
+        addRowShakeAnimation();
         setToast("Not enough letters");
         return;
       }
 
       if (!WORDS.includes(currentGuessRef.current.toLowerCase())) {
+        addRowShakeAnimation();
         setToast("Not in word list");
         return;
       }
