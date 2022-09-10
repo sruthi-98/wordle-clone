@@ -48,27 +48,22 @@ function App() {
     setToastText(text);
   };
 
-  const addRowShakeAnimation = () => {
+  const addRowAnimation = (name, duration) => {
     const gridRow = document.querySelectorAll(".grid-row")?.[guessCount];
     if (!gridRow) return;
 
-    gridRow.setAttribute("data-animation", "shake");
+    gridRow.setAttribute("data-animation", name);
 
     setTimeout(() => {
       gridRow.removeAttribute("data-animation");
-    }, shakeTransitionDuration);
+    }, duration);
   };
 
-  const addFlipAnimation = () => {
-    const gridRow = document.querySelectorAll(".grid-row")?.[guessCount];
-    if (!gridRow) return;
+  const addShakeAnimation = () =>
+    addRowAnimation("shake", shakeTransitionDuration);
 
-    gridRow.setAttribute("data-animation", "flip");
-
-    setTimeout(() => {
-      gridRow.setAttribute("data-animation", "idle");
-    }, flipTransitionDuration);
-  };
+  const addFlipAnimation = () =>
+    addRowAnimation("flip", flipTransitionDuration);
 
   const waitTillFlipAnimationIsCompleted = (callback) => {
     setTimeout(callback, flipTransitionDuration);
@@ -78,7 +73,7 @@ function App() {
     const keyboardKey = document.querySelector(
       `.keyboard-key[data-key=${key.toUpperCase()}]`
     );
-    if (keyboardKey && keyboardKey.dataset?.status !== GUESS_STATUS.CORRECT)
+    if (keyboardKey && !keyboardKey.dataset?.status)
       keyboardKey.dataset.status = status;
   };
 
@@ -151,13 +146,13 @@ function App() {
 
     if (event.key === KEYS.ENTER) {
       if (currentGuessRef.current.length !== GUESS_LENGTH) {
-        addRowShakeAnimation();
+        addShakeAnimation();
         setToast("Not enough letters");
         return;
       }
 
       if (!WORDS.includes(currentGuessRef.current.toLowerCase())) {
-        addRowShakeAnimation();
+        addShakeAnimation();
         setToast("Not in word list");
         return;
       }
