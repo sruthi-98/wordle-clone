@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Grid from "components/Grid/Grid";
 import Header from "components/Header/Header";
 import Keyboard from "components/Keyboard/Keyboard";
-import Toast from "components/Toast/Toast";
+import ToastStack from "components/Toast/ToastStack";
 import useStateRef from "hooks/useStateRef";
 import getRandomWord from "utils/getRandomWord";
 import {
@@ -40,13 +40,21 @@ function App() {
   const [guesses, setGuesses] = useState(
     Array(NUMBER_OF_GUESSES).fill(" ".repeat(GUESS_LENGTH))
   );
-  const [showToast, setShowToast] = useState(false);
-  const [toastText, setToastText] = useState("");
+  const [toastMessages, setToastMessages] = useState([]);
 
-  const setToast = (text) => {
-    setShowToast(true);
-    setToastText(text);
-  };
+  const addToast = (toastMessage) =>
+    setToastMessages((prevToastMessages) => [
+      toastMessage,
+      ...prevToastMessages,
+    ]);
+
+  const removeToast = () =>
+    setToastMessages((prevToastMessages) => {
+      let newToastMessages = prevToastMessages.filter(
+        (_, index) => index < prevToastMessages.length - 1
+      );
+      return newToastMessages;
+    });
 
   const addRowAnimation = (name, duration, transitionEnd) => {
     const gridRow = document.querySelectorAll(".grid-row")?.[guessCount];
@@ -69,7 +77,7 @@ function App() {
       element.setAttribute("data-animation", "idle")
     );
 
-    const waitTillFlipAnimationIsCompleted = (callback) => {
+  const waitTillFlipAnimationIsCompleted = (callback) => {
     setTimeout(callback, flipTransitionDuration);
   };
 
@@ -121,7 +129,7 @@ function App() {
 
     if (currentGuess === correctGuess) {
       waitTillFlipAnimationIsCompleted(() => {
-        setToast("You Won!");
+        addToast("You Won!");
         setGameStatus(GAME_STATUS.WON);
       });
     }
@@ -151,13 +159,13 @@ function App() {
     if (event.key === KEYS.ENTER) {
       if (currentGuessRef.current.length !== GUESS_LENGTH) {
         addShakeAnimation();
-        setToast("Not enough letters");
+        addToast("Not enough letters");
         return;
       }
 
       if (!WORDS.includes(currentGuessRef.current.toLowerCase())) {
         addShakeAnimation();
-        setToast("Not in word list");
+        addToast("Not in word list");
         return;
       }
 
@@ -194,7 +202,7 @@ function App() {
     ) {
       waitTillFlipAnimationIsCompleted(() => {
         setGameStatus(GAME_STATUS.LOSE);
-        setToast(randomWordRef.current.toUpperCase());
+        addToast(randomWordRef.current.toUpperCase());
       });
     }
   }, [guessCount]);
@@ -204,13 +212,7 @@ function App() {
       <Header />
       <Grid guesses={guesses} guessStatus={guessStatus} />
       <Keyboard keyDownHandler={keyDownHandler} />
-      {showToast && (
-        <Toast
-          setShowToast={setShowToast}
-          showToast={showToast}
-          toastText={toastText}
-        />
-      )}
+      <ToastStack removeToast={removeToast} toastMessages={toastMessages} />
     </div>
   );
 }

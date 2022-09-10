@@ -1,15 +1,14 @@
 import React, { useEffect } from "react";
 import "./Toast.css";
 
-const Toast = ({ setShowToast, showToast, toastText }) => {
+const Toast = ({ removeToast, toastMessage }) => {
   useEffect(() => {
-    if (showToast)
-      setTimeout(() => {
-        setShowToast(false);
-      }, 2000);
-  }, [showToast]);
+    setTimeout(() => {
+      removeToast();
+    }, 2000);
+  }, []);
 
-  return <div className="toast">{toastText}</div>;
+  return <div className="toast">{toastMessage}</div>;
 };
 
 export default Toast;
