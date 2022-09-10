@@ -48,22 +48,26 @@ function App() {
     setToastText(text);
   };
 
-  const addRowAnimation = (name, duration) => {
+  const addRowAnimation = (name, duration, transitionEnd) => {
     const gridRow = document.querySelectorAll(".grid-row")?.[guessCount];
     if (!gridRow) return;
 
     gridRow.setAttribute("data-animation", name);
 
     setTimeout(() => {
-      gridRow.removeAttribute("data-animation");
+      transitionEnd(gridRow);
     }, duration);
   };
 
   const addShakeAnimation = () =>
-    addRowAnimation("shake", shakeTransitionDuration);
+    addRowAnimation("shake", shakeTransitionDuration, (element) => {
+      element.removeAttribute("data-animation");
+    });
 
   const addFlipAnimation = () =>
-    addRowAnimation("flip", flipTransitionDuration);
+    addRowAnimation("flip", flipTransitionDuration, (element) =>
+      element.setAttribute("data-animation", "idle")
+    );
 
   const waitTillFlipAnimationIsCompleted = (callback) => {
     setTimeout(callback, flipTransitionDuration);
