@@ -18,6 +18,15 @@ import "./App.css";
 
 let guessCount = 0;
 
+const flipTransitionDuration =
+  getComputedStyle(document.documentElement, null).getPropertyValue(
+    "--flip-transition-duration"
+  ) * GUESS_LENGTH;
+const shakeTransitionDuration = getComputedStyle(
+  document.documentElement,
+  null
+).getPropertyValue("--shake-transition-duration");
+
 function App() {
   const [, setCurrentGuess, currentGuessRef] = useStateRef("");
   const [, setGameStatus, gameStatusRef] = useStateRef(GAME_STATUS.PLAYING);
@@ -43,11 +52,26 @@ function App() {
     const gridRow = document.querySelectorAll(".grid-row")?.[guessCount];
     if (!gridRow) return;
 
-    gridRow.setAttribute('data-animation', 'shake')
+    gridRow.setAttribute("data-animation", "shake");
 
     setTimeout(() => {
-      gridRow.removeAttribute('data-animation')
-    }, 1000);
+      gridRow.removeAttribute("data-animation");
+    }, shakeTransitionDuration);
+  };
+
+  const addFlipAnimation = () => {
+    const gridRow = document.querySelectorAll(".grid-row")?.[guessCount];
+    if (!gridRow) return;
+
+    gridRow.setAttribute("data-animation", "flip");
+
+    setTimeout(() => {
+      gridRow.setAttribute("data-animation", "idle");
+    }, flipTransitionDuration);
+  };
+
+  const waitTillFlipAnimationIsCompleted = (callback) => {
+    setTimeout(callback, flipTransitionDuration);
   };
 
   const addKeyboardStatus = (key, status) => {
@@ -61,11 +85,6 @@ function App() {
   const checkIfCurrentGuessIsCorrect = () => {
     let currentGuess = currentGuessRef.current.toLowerCase(),
       correctGuess = randomWordRef.current.toLowerCase();
-
-    if (currentGuess === correctGuess) {
-      setToast("You Won!");
-      setGameStatus(GAME_STATUS.WON);
-    }
 
     const currentGuessStatus = Array(GUESS_LENGTH).fill(
       GUESS_STATUS.NOT_PRESENT
@@ -86,9 +105,8 @@ function App() {
       if (
         charIndex > -1 &&
         currentGuessStatus[charIndex] !== GUESS_STATUS.CORRECT
-      ) {
+      )
         currentGuessStatus[charIndex] = GUESS_STATUS.WRONG_POSITION;
-      }
     }
 
     for (let index = 0; index < GUESS_LENGTH; index++) {
@@ -99,6 +117,15 @@ function App() {
       prevGuessStatus[guessCount - 1] = currentGuessStatus;
       return prevGuessStatus;
     });
+
+    addFlipAnimation();
+
+    if (currentGuess === correctGuess) {
+      waitTillFlipAnimationIsCompleted(() => {
+        setToast("You Won!");
+        setGameStatus(GAME_STATUS.WON);
+      });
+    }
   };
 
   const updateCurrentGuess = (newCurrentGuess) => {
@@ -166,8 +193,10 @@ function App() {
       guessCount === NUMBER_OF_GUESSES &&
       gameStatusRef.current !== GAME_STATUS.WON
     ) {
-      setGameStatus(GAME_STATUS.LOSE);
-      setToast(randomWordRef.current.toUpperCase());
+      waitTillFlipAnimationIsCompleted(() => {
+        setGameStatus(GAME_STATUS.LOSE);
+        setToast(randomWordRef.current.toUpperCase());
+      });
     }
   }, [guessCount]);
 

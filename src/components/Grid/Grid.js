@@ -14,8 +14,16 @@ export default Grid;
 const GridRow = ({ guess, status }) => (
   <div className="grid-row">
     {guess.split("").map((guessChar, index) => (
-      <div className="grid-cell" data-status={status[index]} key={index}>
-        {guessChar}
+      <div
+        className="grid-cell"
+        data-status={status[index]}
+        key={index}
+        style={{
+          "--cell-index": index,
+        }}
+      >
+        <span className="grid-cell__front">{guessChar}</span>
+        <span className="grid-cell__back">{guessChar}</span>
       </div>
     ))}
   </div>

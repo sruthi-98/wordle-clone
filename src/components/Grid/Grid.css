@@ -11,33 +11,46 @@
   grid-gap: 0.5rem;
 }
 
-.grid-row[data-animation="shake"] {
-  animation: shake 500ms ease-in-out;
-}
-
 .grid-cell {
   user-select: none;
-  display: grid;
-  place-content: center;
   width: var(--grid-cell-size);
   height: var(--grid-cell-size);
-  font-size: var(--fs-600);
+  position: relative;
+  perspective: 30rem;
 }
 
-.grid-cell[data-status="empty"] {
+.grid-cell__front,
+.grid-cell__back {
+  backface-visibility: hidden;
+  display: grid;
+  place-content: center;
+  font-size: var(--fs-600);
+  position: absolute;
+  inset: 0;
+}
+
+.grid-cell__front {
   border: 0.5px solid var(--clr-grey);
 }
 
-.grid-cell[data-status="not-present"] {
+.grid-cell__back {
+  transform: rotateX(180deg);
+}
+
+.grid-cell[data-status="not-present"] .grid-cell__back {
   background-color: var(--clr-not-present);
 }
 
-.grid-cell[data-status="correct"] {
+.grid-cell[data-status="correct"] .grid-cell__back {
   background-color: var(--clr-correct);
 }
 
-.grid-cell[data-status="wrong-position"] {
+.grid-cell[data-status="wrong-position"] .grid-cell__back {
   background-color: var(--clr-wrong-position);
+}
+
+.grid-row[data-animation="shake"] {
+  animation: shake calc(var(--shake-transition-duration) * 1ms) ease-in-out;
 }
 
 @keyframes shake {
@@ -74,4 +87,16 @@
   100% {
     transform: translateX(0px);
   }
+}
+
+.grid-row[data-animation="flip"] > .grid-cell {
+  --transition-delay: calc(var(--cell-index) * (var(--flip-transition-duration) * 1ms));
+
+  transform-style: preserve-3d;
+  transform: rotateX(180deg);
+  transition: transform calc(var(--flip-transition-duration) * 1ms) ease var(--transition-delay);
+}
+
+.grid-row[data-animation="idle"] .grid-cell__back {
+  transform: rotateX(0);
 }

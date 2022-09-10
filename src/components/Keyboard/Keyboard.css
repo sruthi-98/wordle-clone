@@ -22,10 +22,11 @@
   place-content: center;
   width: var(--keyboard-cell-width);
   height: var(--keyboard-cell-height);
-  background-color: var(--clr-grey);;
+  background-color: var(--clr-grey);
   border-radius: 0.25em;
   font-size: var(--fs-400);
   font-weight: 600;
+  transition: background-color 0ms calc(var(--flip-transition-duration) * 5ms);
 }
 
 .keyboard-key.large {

@@ -24,6 +24,9 @@
   --keyboard-cell-height: min(10vmin, 3.75rem);
 
   --grid-cell-size: min(13vmin, 4.5rem);
+
+  --shake-transition-duration: 500;
+  --flip-transition-duration: 500;
 }
 
 @media screen and (min-width: 40rem) {
