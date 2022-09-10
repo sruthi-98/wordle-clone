@@ -90,13 +90,43 @@
 }
 
 .grid-row[data-animation="flip"] > .grid-cell {
-  --transition-delay: calc(var(--cell-index) * (var(--flip-transition-duration) * 1ms));
+  --transition-delay: calc(
+    var(--cell-index) * (var(--flip-transition-duration) * 1ms)
+  );
 
   transform-style: preserve-3d;
   transform: rotateX(180deg);
-  transition: transform calc(var(--flip-transition-duration) * 1ms) ease var(--transition-delay);
+  transition: transform calc(var(--flip-transition-duration) * 1ms) ease
+    var(--transition-delay);
 }
 
 .grid-row[data-animation="idle"] .grid-cell__back {
   transform: rotateX(0);
+}
+
+.grid-row[data-animation="idle"] .grid-cell {
+  --animation-delay: calc(
+    var(--cell-index) * (var(--jump-transition-duration) * 0.25ms)
+  );
+
+  animation: jump calc(var(--jump-transition-duration) * 1ms) ease-in-out
+    var(--animation-delay);
+}
+
+@keyframes jump {
+  0% {
+    transform: translateY(-20px);
+  }
+  25% {
+    transform: translateY(-40px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  75% {
+    transform: translateY(-40px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
 }

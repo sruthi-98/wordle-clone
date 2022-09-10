@@ -60,16 +60,16 @@ function App() {
   };
 
   const addShakeAnimation = () =>
-    addRowAnimation("shake", shakeTransitionDuration, (element) => {
-      element.removeAttribute("data-animation");
-    });
+    addRowAnimation("shake", shakeTransitionDuration, (element) =>
+      element.removeAttribute("data-animation")
+    );
 
   const addFlipAnimation = () =>
     addRowAnimation("flip", flipTransitionDuration, (element) =>
       element.setAttribute("data-animation", "idle")
     );
 
-  const waitTillFlipAnimationIsCompleted = (callback) => {
+    const waitTillFlipAnimationIsCompleted = (callback) => {
     setTimeout(callback, flipTransitionDuration);
   };
 
