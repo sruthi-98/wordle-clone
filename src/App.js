@@ -85,7 +85,15 @@ function App() {
     const keyboardKey = document.querySelector(
       `.keyboard-key[data-key=${key.toUpperCase()}]`
     );
-    if (keyboardKey && !keyboardKey.dataset?.status)
+    const isValidKeyboardStatusUpdate =
+      [GUESS_STATUS.WRONG_POSITION, GUESS_STATUS.NOT_PRESENT].includes(
+        keyboardKey.dataset?.status
+      ) && status === GUESS_STATUS.CORRECT;
+
+    if (
+      keyboardKey &&
+      (!keyboardKey.dataset?.status || isValidKeyboardStatusUpdate)
+    )
       keyboardKey.dataset.status = status;
   };
 
