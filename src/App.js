@@ -153,6 +153,8 @@ function App() {
   };
 
   const keyDownHandler = (event) => {
+    if (event.altKey || event.cltrKey || event.shiftKey) return;
+
     if (
       gameStatusRef.current === GAME_STATUS.WON ||
       gameStatusRef.current === GAME_STATUS.LOSE
