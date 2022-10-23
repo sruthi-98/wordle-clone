@@ -5,7 +5,7 @@ function getRandomWord() {
   const todayDate = now.getDate();
   const todayMonth = now.getMonth() + 1;
   const todayYear= now.getFullYear();
-  const today = new Date(`${todayDate}/${todayMonth}/${todayYear}`)
+  const today = new Date(`${todayMonth}/${todayDate}/${todayYear}`)
 
   const randomIndex = today.getTime() % WORDS.length;
   const randomWord = WORDS[randomIndex];
