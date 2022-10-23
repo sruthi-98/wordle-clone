@@ -11,7 +11,7 @@ const Grid = ({ guesses, guessStatus }) => (
 
 export default Grid;
 
-const GridRow = ({ guess, status }) => (
+const GridRow = React.memo(({ guess, status }) => (
   <div className="grid-row">
     {guess.split("").map((guessChar, index) => (
       <div
@@ -27,4 +27,4 @@ const GridRow = ({ guess, status }) => (
       </div>
     ))}
   </div>
-);
+));
